@@ -6,7 +6,9 @@ use Conv\DatabaseStructureFactory;
 use Conv\MigrationGenerator;
 use Conv\Operator;
 use Conv\Structure\TableStructureInterface;
+use Phpmig\Console\PhpmigApplication;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -19,6 +21,9 @@ class GenerateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $phpmig = (new PhpmigApplication())->find('migrate');
+        $phpmig->run(new ArrayInput([]), $output);
+
         $filter = function (TableStructureInterface $table) {
             return !in_array($table->getName(), ['migrations'], true);
         };
@@ -80,6 +85,23 @@ EOL;
             $generatedContents["$fileName.php"] = $content;
             $i++;
         }
+
+
+        $operator->output("\n");
+
+        if (0 !== count($alterMigrations->getMigrationList())) {
+
+            foreach ($alterMigrations->getMigrationList() as $migration) {
+                $operator->output("<fg=green>### TABLE NAME: {$migration->getTableName()}</>");
+                $operator->output('<fg=yellow>--------- UP ---------</>');
+                $operator->output("<fg=blue>{$migration->getUp()}</>");
+                $operator->output('<fg=yellow>-------- DOWN --------</>');
+                $operator->output("<fg=magenta>{$migration->getDown()}</>\n\n");
+            }
+        }
+
+        $count = count($alterMigrations->getMigrationList());
+        $operator->output("<fg=green>Generated $count migrations</>");
 
         if (0 !== count($generatedContents)) {
             foreach ($generatedContents as $filename => $content) {
