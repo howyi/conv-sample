@@ -1,5 +1,6 @@
 {
     "require": {
-        "howyi/conv": "^1.1"
+        "howyi/conv": "^1.1",
+        "davedevelopment/phpmig": "dev-master"
     }
 }
