@@ -1,6 +1,7 @@
 {
     "require": {
         "howyi/conv": "^1.1",
-        "davedevelopment/phpmig": "dev-master"
+        "davedevelopment/phpmig": "dev-master",
+        "pimple/pimple": "^3.2"
     }
 }

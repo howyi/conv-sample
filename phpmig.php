@@ -1,7 +1,5 @@
 <?php
 
-require dirname(__FILE__).'/vendor/autoload.php';
-
 use Phpmig\Adapter;
 use Pimple\Container;
 
